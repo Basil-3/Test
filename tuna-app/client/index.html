@@ -1,0 +1,186 @@
+<!-- SPDX-License-Identifier: Apache-2.0 -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hyperledger Fabric Tuna Application</title>
+    <link rel="icon" href="favicon.png" type="image/gif">
+
+    <!-- require jquery and bootstrap scripts -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.3/angular.min.js"></script>
+    
+    <!-- adding style here -->
+    <style type="text/css">
+      header{
+        background-color: lightgray;
+        font-size:20px;
+        padding:15px;
+      }
+      header, .form-group{
+        margin-bottom: 3%;
+      }
+      .form-group{
+        width:50%;
+      }
+      #body{
+        margin-left:3%;
+        margin-right:3%;
+      }
+      .form-control{
+        margin: 8px;
+      }
+      #right_header{
+        width:20%;
+        font-size:15px;
+        margin-right:0px;
+      }
+      #left_header{
+        margin-left:0;
+        width:40%;
+        display:inline-block;
+      } 
+      #id {
+        width:49%;
+        display: inline-block;
+      }
+      table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 100%;
+      }
+      td, th {
+          border: 1px solid #dddddd;
+          text-align: left;
+          padding: 8px;
+      }
+      tr:nth-child(even) {
+          background-color: #dddddd;
+      }
+    </style>
+  </head>
+  <body ng-app="application" ng-controller="appController">
+    <header>
+      <div id="left_header">Automatic Benefits Case Processing Portal</div>
+      <i id="right_header">Portal to tackle SARS-CoV-2 crisis</i>
+    </header>
+
+    <div id="body">
+        <div class="form-group">
+            <label>Query a specific employee</label><br>
+            <h5 style="color:red;margin-bottom:2%" id="error_query">Error: Please enter a valid employee id</h5>
+            
+            Enter employee id: <input id="createName" class="form-control" type="text" placeholder="Ex: 123421" ng-model="employee_id">
+            <input id="querySubmit" type="submit" value="Query" class="btn btn-primary" ng-click="queryEmployee()">
+        </div>
+    
+        <table id="query_employee" class="table" align="center">
+    
+          <tr>
+            <th>Employee ID</th>
+            <th>Employee first name</th>
+            <th>Employee last name</th>
+            <th>Employment status</th>
+            <th>Employee age</th>
+            <th>Employee region</th>
+          </tr>
+    
+          <tr>
+            <td>{{query_employee.employee_id}}</td>
+            <td>{{query_employee.employee_first_name}}</td>
+            <td>{{query_employee.employee_last_name}}</td>
+            <td>{{query_employee.employment_status}}</td>
+            <td>{{query_employee.employee_age}}</td>
+            <td>{{query_employee.employee_region}}</td>
+          </tr>
+        </table>
+
+        <div class="form-group">
+          <label>Register NAV officer</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_nav}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="nav.id">
+          Enter NAV officer's ID: <input class="form-control" type="text" placeholder="Ex: Abc" ng-model="nav.NAV_officer_first_name">
+          Enter NAV officer's first name: <input class="form-control" type="text" placeholder="Ex: Abc" ng-model="nav.NAV_officer_first_name">
+          Enter NAV officer's last name: <input class="form-control" type="text" placeholder="Ex: Xyz" ng-model="nav.NAV_officer_last_name">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerNAV()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Register Bank</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_nav}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="bank.id">
+          Enter Bank's branch code: <input class="form-control" type="text" placeholder="Ex: 11124" ng-model="bank.bank_branch_code">
+          Enter Bank name: <input class="form-control" type="text" placeholder="Ex: SBI" ng-model="bank.bank_name">
+          Enter Bank monetary capacity: <input class="form-control" type="text" placeholder="Ex: 11111100" ng-model="bank.bank_monetary_capacity">
+          Enter Bank region: <input class="form-control" type="text" placeholder="Ex: Oslo" ng-model="bank.bank_region">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerBank()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Register Company</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_msme}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="nav.id">
+          Enter Company registration number: <input class="form-control" type="text" placeholder="Ex: BYN2431232127" ng-model="msme.company_registration_number">
+          Enter Company name: <input class="form-control" type="text" placeholder="Ex: ABC chemicals" ng-model="msme.company_name">
+          Enter Company size: <input class="form-control" type="text" placeholder="Ex: small" ng-model="msme.company_size">
+          Enter Company region: <input class="form-control" type="text" placeholder="Ex: Oslo" ng-model="msme.company_region">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerCompany()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Register Employee</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_employee}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="employee.id">
+          Enter Employee ID: <input class="form-control" type="text" placeholder="Ex: EU12198" ng-model="employee.employee_id">
+          Enter Employee's first name: <input class="form-control" type="text" placeholder="Ex: Abc" ng-model="employee.employee_first_name">
+          Enter Employee's last name: <input class="form-control" type="text" placeholder="Ex: Xyz" ng-model="employee.employee_last_name">
+          Enter Employment status: <input class="form-control" type="text" placeholder="Ex: unemployed" ng-model="employee.employement_status">
+          Enter Employee age: <input class="form-control" type="text" placeholder="Ex: 35" ng-model="employee.employee_age">
+          Enter Employee region: <input class="form-control" type="text" placeholder="Ex: Oslo" ng-model="employee.employee_region">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerEmployee()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Register Government officer</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_govt}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="govt.id">
+          Enter Government officer ID: <input class="form-control" type="text" placeholder="Ex: NOR3452" ng-model="govt.government_officer_id">
+          Enter Government officer's first name: <input class="form-control" type="text" placeholder="Ex: Abc" ng-model="govt.government_officer_first_name">
+          Enter Government officer's last name: <input class="form-control" type="text" placeholder="Ex: Xyz" ng-model="govt.government_officer_last_name">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerGovt()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Register Labor</label>
+          <h5 style="color:green;margin-bottom:2%" id="success_create">Success! Tx ID: {{create_labor}}</h5>
+          <br>
+          Enter serial id: <input class="form-control" type="text" placeholder="Ex: 11" ng-model="labor.id">
+          Enter Labor ID: <input class="form-control" type="text" placeholder="Ex: 31232127" ng-model="labor.labor_id">
+          Enter Labor's first name: <input class="form-control" type="text" placeholder="Ex: Abc" ng-model="labor.labor_first_name">
+          Enter Labor's last name: <input class="form-control" type="text" placeholder="Ex: Xyz" ng-model="labor.labor_last_name">
+          Enter Labor age: <input class="form-control" type="text" placeholder="Ex: 27" ng-model="labor.labor_age">
+          Enter Labor region: <input class="form-control" type="text" placeholder="Ex: Oslo" ng-model="labor.labor_region">
+          <input id="createSubmit" type="submit" value="Create" class="btn btn-primary" ng-click="registerLabor()"> 
+        </div>
+
+        <div class="form-group">
+          <label>Change Employment Status</label><br>
+          <h5 style="color:green;margin-bottom:2%" id="success_holder">Success! Tx ID: {{change_employment_status}}</h5>
+          <h5 style="color:red;margin-bottom:2%" id="error_holder">Error: Please enter a valid Employee Id</h5>
+          Enter Employee ID: <input class="form-control" name="assetSelect" placeholder="Ex: EU12198" ng-model="employment_status.employmee_id">
+          Enter New employment status: <input class="form-control" name="assetSelect" placeholder="Ex: employed" ng-model="employment_status.employment_status">
+          <input id="transferSubmit" type="submit" value="Change" class="btn btn-primary" ng-click="changeEmploymentStatus()">
+        </div>
+    
+    </div>
+  </body>
+    <!-- requiring the angular page -->
+    <script type="text/javascript" src="app.js"> </script>
+</html>
